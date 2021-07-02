@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    compile files('src\\main\\resources\\ysoserial-master-d367e379d9-1.jar')
+}
+
+
+test {
+    useJUnitPlatform()
+}
+
+
+def mainClassName = "com.tapestry.poc.TapestryExploit"
+
+task runnbaleJar(type: Jar) {
+    from files(sourceSets.main.output.classesDirs)
+    from files(sourceSets.main.output.resourcesDir)
+    from configurations.runtime.asFileTree.files.collect { zipTree(it) }
+
+    exclude 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.SF'
+
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
